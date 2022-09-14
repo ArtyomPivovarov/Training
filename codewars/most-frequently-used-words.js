@@ -27,7 +27,7 @@
 //     Avoid sorting the entire array of unique words.
 
 const topThreeWords = text => {
-    const stats = text.split(/[^\w']+/).reduce((acc, el) => {
+    const stats = text.split(/\s+'\s+|[^\w']/gmi).reduce((acc, el) => {
         if (!el) return acc;
         el = el.toLowerCase();
         acc[el] = acc[el] ? ++acc[el] : 1;
