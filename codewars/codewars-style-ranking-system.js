@@ -35,52 +35,60 @@
 // user.incProgress(-7)
 // user.progress // => 10
 // user.incProgress(-5) // will add 90 progress
-// user.progress # => 0 // progress is now zero
-// user.rank # => -7 // rank was upgraded to -7
+// user.progress  => 0 // progress is now zero
+// user.rank  => -7 // rank was upgraded to -7
 // Note: Codewars no longer uses this algorithm for its own ranking system.
 // It uses a pure Math based solution that gives consistent results no matter what order a set of ranked activities are completed at.
 
 class User {
-    #AVAILABLE_RANKS = [-8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8];
-    #IGNORE_DELTA_RANK = -2;
-    #ONE_LOWER_DELTA_WORTH_POINTS = 1;
-    #SAME_DELTA_WORTH_POINTS = 3;
-    #RANK_STEP_POINTS_COUNT = 100;
-    #totalProgress = 0;
+    constructor() {
+        this.AVAILABLE_RANKS = [-8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8];
+        this.IGNORE_DELTA_RANK = -2;
+        this.ONE_LOWER_DELTA_WORTH_POINTS = 1;
+        this.SAME_DELTA_WORTH_POINTS = 3;
+        this.RANK_STEP_POINTS_COUNT = 100;
+        this.totalProgress = 0;
+    }
 
     get rank() {
-        return this.#AVAILABLE_RANKS[Math.floor(this.#totalProgress / this.#RANK_STEP_POINTS_COUNT)] ??
-            this.#AVAILABLE_RANKS[this.#AVAILABLE_RANKS.length - 1];
+        return this.AVAILABLE_RANKS[Math.floor(this.totalProgress / this.RANK_STEP_POINTS_COUNT)] ??
+            this.AVAILABLE_RANKS[this.AVAILABLE_RANKS.length - 1];
     }
 
     get progress () {
-        return this.#totalProgress % this.#RANK_STEP_POINTS_COUNT
+        return this.rank === this.AVAILABLE_RANKS[this.AVAILABLE_RANKS.length - 1] ?
+            0 :
+            this.totalProgress % this.RANK_STEP_POINTS_COUNT
     }
 
     incProgress(taskRank) {
-        const rankDelta = this.#getRankIndex(taskRank) - this.#getRankIndex();
-        if (rankDelta <= this.#IGNORE_DELTA_RANK) return;
+        if (!this.AVAILABLE_RANKS.includes(taskRank)) {
+            throw new Error()
+        }
+
+        const rankDelta = this.getRankIndex(taskRank) - this.getRankIndex();
+        if (rankDelta <= this.IGNORE_DELTA_RANK) return;
 
         switch (true) {
-            case rankDelta <= this.#IGNORE_DELTA_RANK:
+            case rankDelta <= this.IGNORE_DELTA_RANK:
                 return;
             case rankDelta === -1:
-                this.#totalProgress += this.#ONE_LOWER_DELTA_WORTH_POINTS;
+                this.totalProgress += this.ONE_LOWER_DELTA_WORTH_POINTS;
                 break;
             case rankDelta === 0:
-                this.#totalProgress += this.#SAME_DELTA_WORTH_POINTS;
+                this.totalProgress += this.SAME_DELTA_WORTH_POINTS;
                 break;
             default:
-                this.#totalProgress += this.#getHigherRankWorthPoints(rankDelta);
+                this.totalProgress += this.getHigherRankWorthPoints(rankDelta);
                 break;
         }
     }
 
-    #getRankIndex(rank = this.rank) {
-        return this.#AVAILABLE_RANKS.findIndex(el => el === rank);
+    getRankIndex(rank = this.rank) {
+        return this.AVAILABLE_RANKS.findIndex(el => el === rank);
     }
 
-    #getHigherRankWorthPoints(rankDelta) {
+    getHigherRankWorthPoints(rankDelta) {
         return 10 * rankDelta ** 2;
     }
 }
@@ -91,5 +99,5 @@ console.log(user.progress) // => 0
 user.incProgress(-7)
 console.log(user.progress) // => 10
 user.incProgress(-5) // will add 90 progress
-console.log(user.progress)// # => 0 // progress is now zero
-console.log(user.rank)// # => -7 // rank was upgraded to -7
+console.log(user.progress)//  => 0 // progress is now zero
+console.log(user.rank)//  => -7 // rank was upgraded to -7
