@@ -52,4 +52,4 @@ coursing. An olla of rather more beef than mutton, a salad on most
 nights, scraps on Saturdays, lentils on Fridays, and a pigeon or so extra
 on Sundays, made away with three-quarters of' 'his inco'me.`)) // ['a','of','on']
 console.log(topThreeWords("  //wont won't won't ")); // ["won't", "wont"]
-console.log(topThreeWords("  '  ")) // [] todo
+console.log(topThreeWords("  '  ")) // []
